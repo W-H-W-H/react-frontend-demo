@@ -1,11 +1,17 @@
 import { FC, ReactElement } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../security/AuthContext";
 import { Role } from "../security/Roles";
 
 const HeaderComponent: FC = (): ReactElement => { 
     
     const authContext = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        authContext?.logout();
+        navigate("/home");
+    }
 
     return (
         <header className="header">
@@ -18,7 +24,7 @@ const HeaderComponent: FC = (): ReactElement => {
                 <ul className="flex">
                     { authContext?.userDetails === null &&  <li className="header-link"><Link to="/login">Login</Link></li> }
                     { authContext?.userDetails === null &&  <li className="header-link"><Link to="/signup">Sign-up</Link></li> }
-                    { authContext?.userDetails?.roles.includes(Role.USER) &&   <li className="header-link"><button onClick={async () => await authContext?.logout()}>Logout</button></li>}
+                    { authContext?.userDetails?.roles.includes(Role.USER) &&   <li className="header-link"><button onClick={handleLogout}>Logout</button></li>}
                 </ul>
         </header>
     );

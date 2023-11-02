@@ -69,3 +69,23 @@ code {
 .header-link:hover {
   @apply text-blue-800
 }
+
+.table-container {
+  @apply w-full overflow-x-auto
+}
+
+.table {
+  @apply w-full mx-auto text-left text-gray-500
+}
+
+.table > thead{
+  @apply text-gray-700 uppercase bg-gray-50
+}
+
+.table tr {
+  @apply border-b
+}
+
+.table th, .table td {
+  @apply px-6 py-3
+}

@@ -51,13 +51,13 @@ const BookListComponent : FC = () => {
     }, [authContext, setIsManager]);
 
     return (
-        <div className="w-full">
-            <table className="w-11/12 mx-auto text-left text-gray-500">
-                <thead className="text-gray-700 uppercase bg-gray-50">
-                    <tr className="border-b">
-                        <th className={isManager ? "w-5/12" : "w-6/12"}>Title</th>
-                        <th className={isManager ? "w-3/12" : "w-3/12"}>ISBN</th>
-                        <th className={isManager ? "w-2/12" : "w-3/12"}>Add to favourite</th>
+        <div className="table-container">
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th className={(isManager ? "w-5/12" : "w-6/12")}>Title</th>
+                        <th className={(isManager ? "w-3/12" : "w-3/12")}>ISBN</th>
+                        <th className={(isManager ? "w-2/12" : "w-3/12")}>Add to favourite</th>
                         {
                             isManager &&  <th className="w-2/12">Delete book</th>
                         }
@@ -67,7 +67,7 @@ const BookListComponent : FC = () => {
                <tbody>
                     {books.map(
                         book => (
-                            <tr key={book.id} className="border-b">
+                            <tr key={book.id}>
                                 <td>
                                     {book.title}
                                 </td>

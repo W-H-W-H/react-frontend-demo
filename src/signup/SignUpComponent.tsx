@@ -1,14 +1,16 @@
 import { FC, ReactElement, useState } from "react";
 import { register } from "../api/Authentication";
+import { useAuth } from "../security/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const SignupComponent : FC = () : ReactElement => {
 
     type InputEvent = React.ChangeEvent<HTMLInputElement>;
 
+    const authContext = useAuth();
+    const navigate = useNavigate();
     const [username, setUsername] = useState<string>("waiting.15@gmail.com");
-
     const [password, setPassword] = useState<string>("dummypassword");
-
     const [displayName, setDisplayName] = useState<string>("Wai Ting 15");
 
     function changeUsername(event: InputEvent){
@@ -27,8 +29,10 @@ const SignupComponent : FC = () : ReactElement => {
     function handleSubmit() {
         register(username, displayName, password)
         .then(
-            (repsonse) => {
-
+            async (repsonse) => {
+                if(await authContext?.login(username, password)){
+                    navigate("/home");
+                }
             }
         )
         .catch(

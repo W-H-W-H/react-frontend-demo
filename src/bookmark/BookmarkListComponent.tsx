@@ -29,9 +29,9 @@ const BookmarkListComponent : FC = () => {
     }
 
     return (
-        <div className="w-full">
-            <table className="w-11/12 mx-auto text-left text-gray-500">
-                <thead className="text-gray-700 uppercase bg-gray-50">
+        <div className="table-container">
+            <table className="table">
+                <thead>
                     <tr>
                         <th className="w-6/12">Title</th>
                         <th className="w-3/12">ISBN</th>

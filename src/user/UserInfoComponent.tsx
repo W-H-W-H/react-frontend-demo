@@ -23,12 +23,13 @@ const UserInfoComponent : FC = () => {
             <div className="form">
                 <h1 className="form-title">Your info</h1>
                 <table className="w-full">
+                    <tbody>
                     <tr>
                         <td className="w-4/12">
                             ID
                         </td>
                         <td className="form-input w-8/12">
-                            <input  type="text" name="id" id="id" value={user?.id}/>
+                        {user?.id}
                         </td>
                     </tr>
                     <tr>
@@ -36,7 +37,7 @@ const UserInfoComponent : FC = () => {
                             Your Name
                         </td>
                         <td className="form-input w-8/12">
-                            <input  type="text" name="id" id="id" value={user?.displayName}/>
+                            {user?.displayName}
                         </td>
                     </tr>
                     <tr>
@@ -44,7 +45,7 @@ const UserInfoComponent : FC = () => {
                             Email
                         </td>
                         <td className="form-input w-8/12">
-                            <input  type="text" name="id" id="id" value={user?.email}/>
+                            {user?.email}
                         </td>
                     </tr>
                     <tr>
@@ -52,11 +53,10 @@ const UserInfoComponent : FC = () => {
                             Roles
                         </td>                   
                         <td className="form-input w-8/12">
-                            <input  type="text" name="id" id="id" value={
-                                user?.roles.map(role => role.roleName).join(", ").toString()
-                            }/>
+                            {user?.roles.map(role => role.roleName).join(", ").toString()}
                         </td>
                     </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

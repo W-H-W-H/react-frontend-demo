@@ -1,36 +1,12 @@
-import { Dispatch, FC, ReactElement, SetStateAction, createContext, useContext, useState } from "react";
+import { FC, ReactElement, createContext, useContext, useState } from "react";
 import { Role } from "./Roles";
 import { loginByUsernameAndPassword, logoutAndRevokeAllAccessToken, refresh_token } from "../api/Authentication";
 import { apiClient } from "../api/ApiClient";
 import { jwtDecode } from "jwt-decode";
+import { UserDetails } from "./UserDetails";
+import { IAuthContextProps } from "./IAuthContextProps";
 
-interface IProps {
-    children : ReactElement;
-}
-
-interface UserDetails {
-    userEmail : string,
-    roles : Role[],
-    accessToken : string,
-    refreshToken: string,
-}
-
-type IAuthContext = {
-    userDetails : UserDetails | null,
-    setUserDetails : Dispatch<SetStateAction<UserDetails|null>>
-    login : ((userEmail: string, password: string) => Promise<boolean>),
-    logout : (() => void)
-} 
-
-interface DecodedJwtPlayload {
-    roles : string[],
-    sub : string,
-    iat: number,
-    exp: number
-}
-
-
-const AuthContext = createContext<IAuthContext|null>(null);
+const AuthContext = createContext<IAuthContextProps|null>(null);
 
 const useAuth = () => {
     const context = useContext(AuthContext);
@@ -40,9 +16,20 @@ const useAuth = () => {
     return context;
 };
 
-const AuthProvider : FC<IProps> = ( { children } )  => {
+interface IAuthProviderProps {
+    children : ReactElement;
+}
+
+const AuthProvider : FC<IAuthProviderProps> = ( { children } )  => {
 
     const [userDetails, setUserDetails] = useState<UserDetails|null>(null);
+
+    interface DecodedJwtPlayload {
+        roles : string[],
+        sub : string,
+        iat: number,
+        exp: number
+    }
 
     async function login(userEmail : string, password : string) : Promise<boolean>{
         try{
@@ -51,8 +38,12 @@ const AuthProvider : FC<IProps> = ( { children } )  => {
                 const accessToken : string = response.data.accessToken;
                 const refreshToken : string = response.data.refreshToken;
 
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken)
+
                 apiClient.interceptors.request.use(
                     (config)=>{
+                        const accessToken = localStorage.getItem('accessToken');
                         config.headers.setAuthorization(`Bearer ${accessToken}`);
                         config.headers.set("Refresh-Token", `Bearer ${refreshToken}`);
                         config.headers.setContentType('application/json');
@@ -67,11 +58,16 @@ const AuthProvider : FC<IProps> = ( { children } )  => {
                         if(error.response.status === 403 && !originalRequest._retry){
                             originalRequest._retry = true;
                             const response = await refresh_token();
-                            apiClient.defaults.headers['Authorization'] = response.data.accessToken;
+                            const newAccessToken = response.data.accessToken;
+                            apiClient.defaults.headers['Authorization'] = newAccessToken;
+                            localStorage.setItem('accessToken', newAccessToken);
                             console.log("Retry the request");
                             return apiClient(originalRequest);
+                        }else{
+                            localStorage.clear();
+                            return Promise.reject(error);
                         }
-                        return Promise.reject(error);
+                        
                     }
                 );
 
@@ -80,12 +76,8 @@ const AuthProvider : FC<IProps> = ( { children } )  => {
 
                 const userDetails = {
                     userEmail,
-                    roles,
-                    accessToken,
-                    refreshToken
+                    roles
                 };
-
-                console.log("Set UserDetails.userEmail=" + userDetails.userEmail);
                 setUserDetails(userDetails);
                 return true;
             }else{
@@ -98,10 +90,11 @@ const AuthProvider : FC<IProps> = ( { children } )  => {
     } 
 
     async function logout(){
+        localStorage.clear();
+        setUserDetails(null);
         logoutAndRevokeAllAccessToken()
             .then((response)=>{})
             .catch((error)=>{});
-        setUserDetails(null);
     }
 
     function roleMapper(roleName : string) : Role{
