@@ -1,6 +1,6 @@
 import axios from "axios"
 import { LocalStorageDao } from "../security/LocalStorageDao";
-import { refresh_token } from "./Authentication";
+import { refreshAccessToken } from "./Authentication";
 
 export const apiClient = axios.create(
     {
@@ -11,7 +11,6 @@ export const apiClient = axios.create(
 apiClient.interceptors.request.use(
     (config)=>{
         const accessToken = LocalStorageDao.getAccessToken();
-        console.log("Request invoked, accessToken=" + accessToken);
         const refreshToken = LocalStorageDao.getRefreshToken();
         config.headers.setAuthorization(`Bearer ${accessToken}`);
         config.headers.set("Refresh-Token", `Bearer ${refreshToken}`);
@@ -26,10 +25,10 @@ apiClient.interceptors.response.use(
         const originalRequest = error.config;
         if(error.response.status === 403 && !originalRequest._retry){
             originalRequest._retry = true;
-            const response = await refresh_token();
+            const response = await refreshAccessToken();
             const newAccessToken = response.data.accessToken;
             LocalStorageDao.setAccessToken(newAccessToken);
-            console.log("Retry the request");
+            console.log(`Request ${originalRequest} failed, retry the request`);
             return apiClient(originalRequest);
         }else{
             return Promise.reject(error);

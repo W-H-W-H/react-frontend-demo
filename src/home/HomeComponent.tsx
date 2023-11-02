@@ -12,7 +12,7 @@ const HomeComponent: FC = () => {
             <div className="message-container-layer2">
                 <h1 className="message-container-title">Welcome to Alexandria</h1>
                 <p className="message-cotainer-description">Greatest Library System in the world</p>
-                <p className="message-cotainer-sub-description">Well we are all Nietzschean fish in that regard</p>
+                <p className="message-cotainer-sub-description">Well, we are all Nietzschean fish in that regard</p>
                 {
                     authContext?.userDetails === null && 
                     <div className="inline-block w-8/12">

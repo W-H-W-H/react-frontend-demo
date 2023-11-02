@@ -4,6 +4,8 @@ import { getAllBooks } from "../api/Book";
 import { useAuth } from "../security/AuthContext";
 import { Role } from "../security/Role";
 import BookComponent from "./BookComponent";
+import { ToastContainer } from "react-toastify";
+import { ToastMethod } from "../error/ToastMethod";
 
 
 const BookListComponent : FC = () => {
@@ -17,7 +19,7 @@ const BookListComponent : FC = () => {
     function refreshBooks(){
         getAllBooks()
         .then((response)=> {setBooks(response.data); })
-        .catch((error) => console.log(error));
+        .catch((_) => { ToastMethod.error("Failed to get books"); });
     }
 
     useEffect(() => {
@@ -27,6 +29,7 @@ const BookListComponent : FC = () => {
 
     return (
         <div className="table-container">
+            <ToastContainer/>
             <table className="table">
                 <thead>
                     <tr>

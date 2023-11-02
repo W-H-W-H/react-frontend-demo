@@ -19,11 +19,10 @@ const HeaderComponent: FC = (): ReactElement => {
                 <ul className="flex">
                     <li className="header-link"><Link to="/">Home</Link></li>
                     { authContext?.userDetails?.roles.includes(Role.USER) && <li className="header-link"><Link to="/books" >Collections of Books</Link></li>}
-                    { authContext?.userDetails?.roles.includes(Role.USER) &&  <li className="header-link"><Link to="/bookmarks" >My Favourite Books</Link></li>}
-                    { authContext?.userDetails?.roles.includes(Role.USER) &&  <li className="header-link"><Link to="/users">My Info</Link></li>}
+                    { authContext?.userDetails?.roles.includes(Role.USER) && <li className="header-link"><Link to="/bookmarks" >My Favourite Books</Link></li>}
                 </ul>
                 <ul className="flex">
-                    { authContext?.userDetails?.roles.includes(Role.USER) &&   <li className="header-link"><button onClick={handleLogout}>Logout</button></li>}
+                    { authContext?.userDetails?.roles.includes(Role.USER) && <li className="header-link"><button onClick={handleLogout}>Logout</button></li>}
                 </ul>
         </header> : <div className="dummy-header"></div>
     );

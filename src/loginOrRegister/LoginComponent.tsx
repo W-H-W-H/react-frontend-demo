@@ -1,6 +1,8 @@
 import { FC, ReactElement, useState } from "react";
 import { useAuth } from "../security/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { ToastMethod } from "../error/ToastMethod";
+import { ToastContainer } from "react-toastify";
 
 const LoginComponent : FC = () : ReactElement => {
 
@@ -10,8 +12,8 @@ const LoginComponent : FC = () : ReactElement => {
     const navigate = useNavigate();
     const authContext = useAuth();
 
-    const [username, setUsername] = useState<string>("waiting.13@gmail.com");
-    const [password, setPassword] = useState<string>("dummypassword");
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     
     function changeUsername(event: InputEvent){
         setUsername(event.target.value);
@@ -24,6 +26,8 @@ const LoginComponent : FC = () : ReactElement => {
     async function handleSubmit() {
         if(await authContext?.login(username, password)){
             navigate("/home");
+        }else{
+            ToastMethod.error("Login failed");
         }
     }
 
@@ -35,6 +39,7 @@ const LoginComponent : FC = () : ReactElement => {
 
     return (
         <div className="form-container">
+            <ToastContainer/>
             <form className="form">
                 <h1 className="form-title">Please Login</h1>
                 <div>
@@ -45,7 +50,7 @@ const LoginComponent : FC = () : ReactElement => {
                 </div>
                 <div>
                     <button className="form-submit-button" type="button" name="login" onClick={handleSubmit}>Login</button>
-                    <button className="form-submit-button" type="button" name="switch" onClick={() => navigate("/signup")}>New User</button>
+                    <button className="form-submit-button" type="button" name="switch" onClick={() => navigate("/signup")}>Goto Signup</button>
                 </div>
             </form>
         </div>

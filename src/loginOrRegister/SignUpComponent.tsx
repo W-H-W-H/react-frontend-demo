@@ -2,6 +2,9 @@ import { FC, ReactElement, useState } from "react";
 import { register } from "../api/Authentication";
 import { useAuth } from "../security/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastMethod } from "../error/ToastMethod";
 
 const SignupComponent : FC = () : ReactElement => {
 
@@ -10,9 +13,9 @@ const SignupComponent : FC = () : ReactElement => {
 
     const authContext = useAuth();
     const navigate = useNavigate();
-    const [username, setUsername] = useState<string>("waiting.15@gmail.com");
-    const [password, setPassword] = useState<string>("dummypassword");
-    const [displayName, setDisplayName] = useState<string>("Wai Ting 15");
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [displayName, setDisplayName] = useState<string>("");
 
     function changeUsername(event: InputEvent){
         setUsername(event.target.value);
@@ -38,7 +41,7 @@ const SignupComponent : FC = () : ReactElement => {
         )
         .catch(
             (error) => {
-
+                ToastMethod.error("Register Failed: " + error.message);
             }
         );
     }
@@ -52,6 +55,7 @@ const SignupComponent : FC = () : ReactElement => {
 
     return (
         <div className="form-container">
+            <ToastContainer/>
             <form className="form">
                 <h1 className="form-title">Register Your Account</h1>
                 <div>
@@ -65,7 +69,7 @@ const SignupComponent : FC = () : ReactElement => {
                 </div>
                 <div>
                     <button className="form-submit-button" type="button" name="login" onClick={handleSubmit}>Signup</button>
-                    <button className="form-submit-button" type="button" name="switch" onClick={() => navigate("/login")}>Back to login page</button>
+                    <button className="form-submit-button" type="button" name="switch" onClick={() => navigate("/login")}>Goto Login</button>
                 </div>
             </form>
         </div>

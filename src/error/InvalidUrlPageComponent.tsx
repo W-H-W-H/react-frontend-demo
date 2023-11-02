@@ -9,7 +9,7 @@ const InvalidUrlPageComponent : FC = () => {
     setInterval( () => setCount(count - 1), 1000);
     
     useEffect( () => {
-        const timer = setTimeout(() => navigate("/home"), count * 1000);
+        const timer = setTimeout(() => navigate(-1), count * 1000);
         return () => clearTimeout(timer);
     }, [count, navigate]);
     
@@ -19,7 +19,7 @@ const InvalidUrlPageComponent : FC = () => {
             <div className="message-container-layer2">
                 <h1 className="message-container-title">Invalid URL</h1>
                 <p className="message-cotainer-description">This URL is not valid.</p>
-                <p className="message-cotainer-sub-description">Back to Home Page in {count} seconds</p>
+                <p className="message-cotainer-sub-description">Back to previous page in {count} seconds</p>
             </div>
         </div>
     );

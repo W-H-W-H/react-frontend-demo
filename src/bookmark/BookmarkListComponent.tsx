@@ -1,6 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import { Book } from "../book/Book";
 import { deleteBookmark, getAllBookmarks } from "../api/Bookmark";
+import { ToastMethod } from "../error/ToastMethod";
+import { ToastContainer } from "react-toastify";
 
 const BookmarkListComponent : FC = () => {
 
@@ -9,7 +11,7 @@ const BookmarkListComponent : FC = () => {
     function refreshBooks(){
         getAllBookmarks()
         .then((response)=> {setBooks(response.data); })
-        .catch((error) => console.log(error));
+        .catch((_) => {ToastMethod.error(`Failed to fetch data`);});
     }
 
     useEffect(() => {
@@ -21,15 +23,17 @@ const BookmarkListComponent : FC = () => {
         .then((response)=>{
             if(response.status === 200){
                 refreshBooks();
+                ToastMethod.success("Bookmark deleted");
             }
         })
-        .catch((error)=>{
-
+        .catch((_)=>{
+            ToastMethod.error("Failed to delete bookmark");
         });
     }
 
     return (
         <div className="table-container">
+            <ToastContainer/>
             <table className="table">
                 <thead>
                     <tr>

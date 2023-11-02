@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Book } from "./Book";
 import { addBookmark } from "../api/Bookmark";
 import { deleteBookWithId } from "../api/Book";
+import { ToastMethod } from "../error/ToastMethod";
 
 interface IBookComponentProps {
     book: Book,
@@ -15,11 +16,11 @@ const BookComponent : FC<IBookComponentProps> = ({book, isManager, refreshBooks}
         addBookmark(bookId)
         .then((response)=>{
             if (response.status === 201){
-                
+                ToastMethod.success("Bookmark added");
             }
         })
-        .catch((error)=>{
-
+        .catch((_)=>{
+            ToastMethod.error(`Failed to add bookmark`);
         })
     }
 
@@ -30,8 +31,8 @@ const BookComponent : FC<IBookComponentProps> = ({book, isManager, refreshBooks}
                 refreshBooks();
             }
         })
-        .catch((error) => {
-
+        .catch((_) => {
+            ToastMethod.error(`Failed to delete the book`);
         });
     }
 

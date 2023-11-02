@@ -3,7 +3,6 @@ import { UserDetails } from "./UserDetails";
 export class LocalStorageDao {
 
     static getAccessToken(){
-        console.log("Invoked getAccessToken with accessToken=" + localStorage.getItem('accessToken'));
         return localStorage.getItem('accessToken');
     }
     

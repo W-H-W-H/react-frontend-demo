@@ -1,16 +1,15 @@
 import './App.css';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import HeaderComponent from './header/HeaderComponent';
-import LoginComponent from './login/LoginComponent';
 import BookListComponent from './book/BookListComponent';
 import AuthProvider, { useAuth } from './security/AuthContext';
 import HomeComponent from './home/HomeComponent';
 import { ReactElement } from 'react';
 import { Role } from './security/Role';
 import UnauthorisedPageComponent from './error/UnauthorisedPageComponent';
-import SignupComponent from './signup/SignUpComponent';
+import LoginComponent from './loginOrRegister/LoginComponent';
+import SignupComponent from './loginOrRegister/SignUpComponent';
 import BookmarkListComponent from './bookmark/BookmarkListComponent';
-import UserInfoComponent from './user/UserInfoComponent';
 import InvalidUrlPageComponent from './error/InvalidUrlPageComponent';
 
 interface IProtectedRouteProps {
@@ -41,14 +40,14 @@ function App() {
         <BrowserRouter>
             <HeaderComponent/>
             <Routes>
-              <Route path="/login" element={<ProtectedRoute children={<LoginComponent/>} requiredRole={null}/>}/>
+              
               <Route path="/" element={<HomeComponent/>}/> 
               <Route path="/home" element={<HomeComponent/>}/>
-              <Route path="/books" element={<ProtectedRoute children={<BookListComponent/>} requiredRole={Role.USER}/>}/>
-              <Route path="/unauthorised" element={<UnauthorisedPageComponent/>}/>
+              <Route path="/login" element={<ProtectedRoute children={<LoginComponent/>} requiredRole={null}/>}/>
               <Route path="/signup" element={<ProtectedRoute children={<SignupComponent/>} requiredRole={null} />}/>
+              <Route path="/books" element={<ProtectedRoute children={<BookListComponent/>} requiredRole={Role.USER}/>}/>
               <Route path="/bookmarks" element={<ProtectedRoute children={<BookmarkListComponent/>} requiredRole={Role.USER}/>}/>
-              <Route path="/users" element={<ProtectedRoute children={<UserInfoComponent/>} requiredRole={Role.USER}/>}/>
+              <Route path="/unauthorised" element={<UnauthorisedPageComponent/>}/>
               <Route path='*' element={<InvalidUrlPageComponent/>}/>
             </Routes>
         </BrowserRouter>
