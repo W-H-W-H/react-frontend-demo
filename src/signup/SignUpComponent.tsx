@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const SignupComponent : FC = () : ReactElement => {
 
     type InputEvent = React.ChangeEvent<HTMLInputElement>;
+    type KeyboardEvent = React.KeyboardEvent<HTMLInputElement>;
 
     const authContext = useAuth();
     const navigate = useNavigate();
@@ -41,6 +42,12 @@ const SignupComponent : FC = () : ReactElement => {
             }
         );
     }
+
+    const handleKeyDown = async (event : KeyboardEvent) => {
+        if (event.key === "Enter"){
+            await handleSubmit();
+        }   
+    }
     
 
     return (
@@ -48,16 +55,17 @@ const SignupComponent : FC = () : ReactElement => {
             <form className="form">
                 <h1 className="form-title">Register Your Account</h1>
                 <div>
-                    <input className="form-input" type="email" id="username" name="useranme" value={username} onChange={changeUsername} autoComplete="false" placeholder="Email"/>
+                    <input className="form-input" type="email" id="username" name="useranme" value={username} onChange={changeUsername} onKeyDown={handleKeyDown} autoComplete="false" autoFocus={true} placeholder="Email"/>
                 </div>
                 <div>
-                    <input className="form-input" type="password" id="password" name="password" value={password} onChange={changePassword} autoComplete="false" placeholder="Password"/>
+                    <input className="form-input" type="password" id="password" name="password" value={password} onChange={changePassword} onKeyDown={handleKeyDown} autoComplete="false" placeholder="Password"/>
                 </div>
                 <div>
-                    <input className="form-input" type="displayName" id="displayName" name="displayName" value={displayName} onChange={changeDisplayName} autoComplete="false" placeholder="Your Name"/>
+                    <input className="form-input" type="displayName" id="displayName" name="displayName" value={displayName} onChange={changeDisplayName} onKeyDown={handleKeyDown} autoComplete="false" placeholder="Your Name"/>
                 </div>
                 <div>
                     <button className="form-submit-button" type="button" name="login" onClick={handleSubmit}>Signup</button>
+                    <button className="form-submit-button" type="button" name="switch" onClick={() => navigate("/login")}>Back to login page</button>
                 </div>
             </form>
         </div>

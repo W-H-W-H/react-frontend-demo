@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const UnauthorisedPageComponent : FC = () => {
+const ErrorPageComponent : FC = () => {
     
     const navigate = useNavigate();
 
@@ -25,4 +25,4 @@ const UnauthorisedPageComponent : FC = () => {
     );
 }
 
-export default UnauthorisedPageComponent;
+export default ErrorPageComponent;

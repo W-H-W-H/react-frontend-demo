@@ -1,12 +1,12 @@
 import { FC, ReactElement, createContext, useContext, useState } from "react";
-import { Role } from "./Roles";
+import { roleNameMapper } from "./Role";
 import { loginByUsernameAndPassword, logoutAndRevokeAllAccessToken} from "../api/Authentication";
 import { jwtDecode } from "jwt-decode";
 import { UserDetails } from "./UserDetails";
-import { IAuthContextProps } from "./IAuthContextProps";
+import { IAuthContext } from "./IAuthContext";
 import { LocalStorageDao } from "./LocalStorageDao";
 
-const AuthContext = createContext<IAuthContextProps|null>(null);
+const AuthContext = createContext<IAuthContext|null>(null);
 
 const useAuth = () => {
     const context = useContext(AuthContext);
@@ -42,7 +42,7 @@ const AuthProvider : FC<IAuthProviderProps> = ( { children } )  => {
                 LocalStorageDao.setRefreshToken(refreshToken);
 
                 const decodedInfo = jwtDecode(accessToken) as DecodedJwtPlayload;
-                const roles = decodedInfo.roles.map( roleName => roleMapper(roleName) );
+                const roles = decodedInfo.roles.map( roleName => roleNameMapper(roleName) );
 
                 const userDetails = {
                     userEmail,
@@ -61,26 +61,13 @@ const AuthProvider : FC<IAuthProviderProps> = ( { children } )  => {
         }
     } 
 
-    async function logout(){
+    function logout(){
         setUserDetails(null);
         LocalStorageDao.clear();
         logoutAndRevokeAllAccessToken()
             .then((response)=>{})
             .catch((error)=>{});
     }
-
-    function roleMapper(roleName : string) : Role{
-        switch(roleName){
-            case "ROLE_MANAGER":
-                return Role.MANAGER;
-            case "ROLE_USER":
-                return Role.USER
-            case "ROLE_ADMIN":
-                return Role.ADMIN;
-            default: return Role.USER;
-        }
-    }
-    
     
     return (
         <AuthContext.Provider value = { {userDetails, setUserDetails, login, logout } }>

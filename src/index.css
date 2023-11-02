@@ -16,6 +16,14 @@ code {
     monospace;
 }
 
+.App {
+  @apply bg-gray-50
+}
+
+.App > :not(.dummy-header,.header) {
+  @apply h-screen
+}
+
 .btn {
   @apply font-bold py-1 px-2 rounded;
 }
@@ -43,7 +51,7 @@ code {
 }
 
 .form{
-  @apply self-center mx-auto my-auto w-4/12 border-dashed border-2 border-gray-300 rounded-lg 
+  @apply self-center mx-auto my-auto w-4/12 border-2 border-gray-50 rounded-lg  shadow-lg
 }
 
 .form-title{
@@ -55,19 +63,19 @@ code {
 }
 
 .form-submit-button{
-  @apply my-4 btn btn-blue w-8/12
+  @apply mx-2 my-4 btn btn-blue w-4/12
 }
 
 .header {
-  @apply block w-full h-10 top-0 left-0 flex flex-row justify-between bg-white border-b-2
+  @apply block w-full h-10 top-0 left-0 flex flex-row justify-between bg-sky-900 border-b-2
 }
 
 .header-link {
-  @apply py-2 pl-3 pr-4 text-gray-700 font-semibold
+  @apply py-2 pl-3 pr-4 text-gray-50 font-semibold
 }
 
 .header-link:hover {
-  @apply text-blue-800
+  @apply text-blue-200
 }
 
 .table-container {
@@ -79,17 +87,41 @@ code {
 }
 
 .table > thead{
-  @apply text-gray-700 uppercase bg-gray-50
+  @apply text-gray-700 uppercase bg-gray-200
 }
 
 .table tr {
   @apply border-b
 }
 
-.table tr:hover {
-  @apply bg-gray-50
+.table > tbody > tr:hover {
+  @apply bg-gray-100
 }
 
 .table th, .table td {
   @apply px-6 py-3
+}
+
+.message-container-layer1 {
+  @apply grid place-content-center
+}
+
+.message-container-layer2 {
+  @apply text-center mx-20
+}
+
+.message-container-layer2 > * {
+  @apply my-4
+}
+
+.message-container-title {
+  @apply text-gray-400 font-bold text-8xl
+}
+
+.message-cotainer-description{
+  @apply text-3xl font-bold text-gray-900 
+}
+
+.message-cotainer-sub-description{
+  @apply text-gray-500 text-2xl
 }

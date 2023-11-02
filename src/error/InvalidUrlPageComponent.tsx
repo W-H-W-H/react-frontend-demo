@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const UnauthorisedPageComponent : FC = () => {
+const InvalidUrlPageComponent : FC = () => {
     
     const navigate = useNavigate();
 
@@ -17,12 +17,12 @@ const UnauthorisedPageComponent : FC = () => {
     return (
         <div className="message-container-layer1">
             <div className="message-container-layer2">
-                <h1 className="message-container-title">Unauthorised</h1>
-                <p className="message-cotainer-description">You are not allowed to access this page.</p>
+                <h1 className="message-container-title">Invalid URL</h1>
+                <p className="message-cotainer-description">This URL is not valid.</p>
                 <p className="message-cotainer-sub-description">Back to Home Page in {count} seconds</p>
             </div>
         </div>
     );
 }
 
-export default UnauthorisedPageComponent;
+export default InvalidUrlPageComponent;

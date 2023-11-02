@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react"
 import { Book } from "./Book"
-import { deleteBookWithId, getAllBooks } from "../api/Book";
+import { getAllBooks } from "../api/Book";
 import { useAuth } from "../security/AuthContext";
-import { Role } from "../security/Roles";
-import { addBookmark } from "../api/Bookmark";
+import { Role } from "../security/Role";
+import BookComponent from "./BookComponent";
 
 
 const BookListComponent : FC = () => {
@@ -18,31 +18,6 @@ const BookListComponent : FC = () => {
         getAllBooks()
         .then((response)=> {setBooks(response.data); })
         .catch((error) => console.log(error));
-    }
-
-    function handleDelete(bookId : string){
-        deleteBookWithId(bookId)
-        .then((response) => {
-            if (response.status === 204){
-                refreshBooks();
-            }
-        })
-        .catch((error) => {
-
-        });
-    }
-
-    function handleBookmark(bookId : string){
-        addBookmark(bookId)
-        .then((response)=>{
-            if (response.status === 201){
-                
-            }
-        })
-        .catch((error)=>{
-
-        })
-
     }
 
     useEffect(() => {
@@ -67,23 +42,7 @@ const BookListComponent : FC = () => {
                <tbody>
                     {books.map(
                         book => (
-                            <tr key={book.id}>
-                                <td>
-                                    {book.title}
-                                </td>
-                                <td>
-                                    {book.isbn}
-                                </td>
-                                <td>
-                                    <button className="btn btn-green" type="button" onClick={() => handleBookmark(book.id)}>Bookmark</button>
-                                </td>
-                                {
-                                    isManager &&  
-                                    <td>
-                                        <button className="btn btn-red" type="button" onClick={() => handleDelete(book.id)}>DELETE</button>
-                                    </td>
-                                }
-                            </tr>
+                            <BookComponent book={book} isManager={isManager} refreshBooks={refreshBooks}/>
                         )
                     )}
                </tbody>

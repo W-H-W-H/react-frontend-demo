@@ -6,11 +6,12 @@ import BookListComponent from './book/BookListComponent';
 import AuthProvider, { useAuth } from './security/AuthContext';
 import HomeComponent from './home/HomeComponent';
 import { ReactElement } from 'react';
-import { Role } from './security/Roles';
+import { Role } from './security/Role';
 import UnauthorisedPageComponent from './error/UnauthorisedPageComponent';
 import SignupComponent from './signup/SignUpComponent';
 import BookmarkListComponent from './bookmark/BookmarkListComponent';
 import UserInfoComponent from './user/UserInfoComponent';
+import InvalidUrlPageComponent from './error/InvalidUrlPageComponent';
 
 interface IProtectedRouteProps {
   children : ReactElement
@@ -45,9 +46,10 @@ function App() {
               <Route path="/home" element={<HomeComponent/>}/>
               <Route path="/books" element={<ProtectedRoute children={<BookListComponent/>} requiredRole={Role.USER}/>}/>
               <Route path="/unauthorised" element={<UnauthorisedPageComponent/>}/>
-              <Route path="/signup" element={<SignupComponent/>}/>
+              <Route path="/signup" element={<ProtectedRoute children={<SignupComponent/>} requiredRole={null} />}/>
               <Route path="/bookmarks" element={<ProtectedRoute children={<BookmarkListComponent/>} requiredRole={Role.USER}/>}/>
               <Route path="/users" element={<ProtectedRoute children={<UserInfoComponent/>} requiredRole={Role.USER}/>}/>
+              <Route path='*' element={<InvalidUrlPageComponent/>}/>
             </Routes>
         </BrowserRouter>
       </AuthProvider>

@@ -28,7 +28,6 @@ apiClient.interceptors.response.use(
             originalRequest._retry = true;
             const response = await refresh_token();
             const newAccessToken = response.data.accessToken;
-            apiClient.defaults.headers['Authorization'] = newAccessToken;
             LocalStorageDao.setAccessToken(newAccessToken);
             console.log("Retry the request");
             return apiClient(originalRequest);
