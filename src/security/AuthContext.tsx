@@ -1,10 +1,10 @@
 import { FC, ReactElement, createContext, useContext, useState } from "react";
 import { Role } from "./Roles";
-import { loginByUsernameAndPassword, logoutAndRevokeAllAccessToken, refresh_token } from "../api/Authentication";
-import { apiClient } from "../api/ApiClient";
+import { loginByUsernameAndPassword, logoutAndRevokeAllAccessToken} from "../api/Authentication";
 import { jwtDecode } from "jwt-decode";
 import { UserDetails } from "./UserDetails";
 import { IAuthContextProps } from "./IAuthContextProps";
+import { LocalStorageDao } from "./LocalStorageDao";
 
 const AuthContext = createContext<IAuthContextProps|null>(null);
 
@@ -22,7 +22,7 @@ interface IAuthProviderProps {
 
 const AuthProvider : FC<IAuthProviderProps> = ( { children } )  => {
 
-    const [userDetails, setUserDetails] = useState<UserDetails|null>(null);
+    const [userDetails, setUserDetails] = useState<UserDetails|null>(LocalStorageDao.getUserDetails());
 
     interface DecodedJwtPlayload {
         roles : string[],
@@ -38,38 +38,8 @@ const AuthProvider : FC<IAuthProviderProps> = ( { children } )  => {
                 const accessToken : string = response.data.accessToken;
                 const refreshToken : string = response.data.refreshToken;
 
-                localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('refreshToken', refreshToken)
-
-                apiClient.interceptors.request.use(
-                    (config)=>{
-                        const accessToken = localStorage.getItem('accessToken');
-                        config.headers.setAuthorization(`Bearer ${accessToken}`);
-                        config.headers.set("Refresh-Token", `Bearer ${refreshToken}`);
-                        config.headers.setContentType('application/json');
-                        return config;
-                    }
-                );
-
-                apiClient.interceptors.response.use(
-                    (response) => response,
-                    async (error) => {
-                        const originalRequest = error.config;
-                        if(error.response.status === 403 && !originalRequest._retry){
-                            originalRequest._retry = true;
-                            const response = await refresh_token();
-                            const newAccessToken = response.data.accessToken;
-                            apiClient.defaults.headers['Authorization'] = newAccessToken;
-                            localStorage.setItem('accessToken', newAccessToken);
-                            console.log("Retry the request");
-                            return apiClient(originalRequest);
-                        }else{
-                            localStorage.clear();
-                            return Promise.reject(error);
-                        }
-                        
-                    }
-                );
+                LocalStorageDao.setAccessToken(accessToken);
+                LocalStorageDao.setRefreshToken(refreshToken);
 
                 const decodedInfo = jwtDecode(accessToken) as DecodedJwtPlayload;
                 const roles = decodedInfo.roles.map( roleName => roleMapper(roleName) );
@@ -79,9 +49,11 @@ const AuthProvider : FC<IAuthProviderProps> = ( { children } )  => {
                     roles
                 };
                 setUserDetails(userDetails);
+                LocalStorageDao.setUserDetails(userDetails);
                 return true;
             }else{
                 setUserDetails(null);
+                LocalStorageDao.clear();
                 return false;
             }
         }catch(error){
@@ -90,8 +62,8 @@ const AuthProvider : FC<IAuthProviderProps> = ( { children } )  => {
     } 
 
     async function logout(){
-        localStorage.clear();
         setUserDetails(null);
+        LocalStorageDao.clear();
         logoutAndRevokeAllAccessToken()
             .then((response)=>{})
             .catch((error)=>{});
