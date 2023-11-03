@@ -8,9 +8,9 @@ const HeaderComponent: FC = (): ReactElement => {
     const authContext = useAuth();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        authContext?.logout();
-        navigate("/login");
+    const handleLogout = async () => {
+        await authContext?.logout();
+        navigate("/home");
     }
     
 

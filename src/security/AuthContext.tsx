@@ -61,12 +61,10 @@ const AuthProvider : FC<IAuthProviderProps> = ( { children } )  => {
         }
     } 
 
-    function logout(){
+    async function logout(){
         setUserDetails(null);
         LocalStorageDao.clear();
-        logoutAndRevokeAllAccessToken()
-            .then((response)=>{})
-            .catch((error)=>{});
+        await logoutAndRevokeAllAccessToken();
     }
     
     return (

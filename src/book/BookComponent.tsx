@@ -28,6 +28,7 @@ const BookComponent : FC<IBookComponentProps> = ({book, isManager, refreshBooks}
         deleteBookWithId(bookId)
         .then((response) => {
             if (response.status === 204){
+                ToastMethod.success("The book is deleted");
                 refreshBooks();
             }
         })

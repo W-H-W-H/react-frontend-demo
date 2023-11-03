@@ -33,7 +33,7 @@ const SignupComponent : FC = () : ReactElement => {
     function handleSubmit() {
         register(username, displayName, password)
         .then(
-            async (repsonse) => {
+            async (_) => {
                 if(await authContext?.login(username, password)){
                     navigate("/home");
                 }
